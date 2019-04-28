@@ -1,0 +1,84 @@
+<html>
+<head>
+    <link rel="stylesheet" href="/lib/jsmind/style/jsmind.css">
+    <link rel="stylesheet" href="/lib/Layui/css/layui.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="/lib/Layui/layui.js"></script>
+    <base target="_parent">
+</head>
+<body style="background-color: #F2F2F2;">
+<div style="padding: 20px;" class="layui-tab">
+    <ul class="layui-tab-title">
+        <li class="layui-this">添加用户</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <form class="layui-form" method="post" action="/teacherhome/adduser">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="username" placeholder="请输入用户名">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="password" placeholder="请输入密码">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">电话</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="phone" placeholder="请输入电话好码">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">真实姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="realname" placeholder="请输用户真实姓名">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">身份代号</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="status" value="0" title="学生">
+                        <input type="radio" name="status" value="1" title="教师">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="email" placeholder="请输入邮箱">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">学号/教工号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="work_id" placeholder="请输入学号/教工号">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+<script>
+    layui.use(['element','form'],function(){
+        var element   = layui.element;
+        var layer     = layui.layer;
+        var $         = layui.jquery;
+        var form      = layui.form;
+        form.on('submit(formDemo)',function(){
+            layer.msg(JSON.stringify(data.field));
+            return false;
+        })
+    });
+</script>
+</html>

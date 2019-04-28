@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>思维导图</title>
+		<link rel="stylesheet" href="/lib/Layui/css/layui.css" />
+		<link rel="stylesheet" href="/css/style.css" />
+		<link rel="stylesheet" href="/lib/jsmind/style/jsmind.css">
+        <script type="text/javascript" src="/lib/Layui/layui.js"></script>
+        <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+        <script src="/lib/jsmind/js/jsmind.js"></script>
+        <script src="/lib/jsmind/js/jsmind.draggable.js"></script>
+        <script src="/lib/jsmind/js/jsmind.screenshot.js"></script>
+		<base target="_blank">
+	</head>
+
+	<body>
+		<div class="layui-nav">
+			<div class="box-center nav clear">
+				<a class="logo" href="#"><img src="/img/logo.png"></a>
+
+				<ul class="navmenu" lay-filter="">
+					<li class="layui-nav-item">
+						<a href="">首页</a>
+					</li>
+					<li class="layui-nav-item layui-this">
+						<a href="">课程广场</a>
+					</li>
+					<li class="layui-nav-item my">
+						<a href=""><img src="/user/teacher.jpg" class="layui-nav-img">我</a>
+						<dl class="layui-nav-child">
+							<dd>
+								<a href="/stduenthome/logout">退了</a>
+							</dd>
+						</dl>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="box-center conbg">
+			<div class="leftbox">
+
+				<ul class="layui-nav layui-nav-tree layui-bg-cyan layui-inline" lay-filter="demo" style="width:296px;height:100%;">
+					<li class="layui-nav-item">
+
+                        <a id="mind_name">思维导图名称</a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <form class = "layui-form" action = "/jsmind_courses/change_name">
+                                    <label class="layui-form-label">输入框</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name = "mind_id" placeholder="请输入思维导图名称" autocomplete="off" class="layui-input">
+                                        <button class="layui-btn" lay-submit lay-filter="form-submit">提交保存</button>
+                                    </div>
+                                </form>
+                            </dd>
+                        </dl>
+					</li>
+					<li class="layui-nav-item">
+						<a id = "save_map">保存</a>
+					</li>
+					<li class="layui-nav-item">
+                        <a>编辑</a>
+                        <dl class="layui-nav-child">
+                            <dd><a id = "add_sibling_node">添加同级节点</a></dd>
+                            <dd><a id = "add_child_node">添加子节点</a></dd>
+                            <dd><a id = "remove_node">删除节点</a></dd>
+                            <dd><a id = "clear_map">清空此图上的所有的内容</a></dd>
+                            <dd><a id = "destory_map">删除此图</a></dd>
+                        </dl>
+                    </li>
+				</ul>
+			</div>
+
+			<div class="rightbox">
+				<div id="jsmindcontainer"></div>
+			</div>
+		</div>
+
+    </body>
+	<script>
+		layui.use(['element','form','layer'], function() {
+		    console.log("开始初始化");
+		    var layer   = layui.layer;
+		    var $       = layui.jquery;
+			var element = layui.element;
+            var form    = layui.form;
+            var url     = location.href.split('/courses_des')[0];
+            var courseid= location.href.split('/courses_des')[1];
+            var active  = {
+                prompt:function (othis) {
+                    layer.open({
+                        type: 2,
+                        title: othis.text(),
+                        content:url + '/iframe' + courseid + '/' + othis.attr('nodeid'),
+                        area: ['350px','500px'],
+                        shade: 0.8,
+                        id: 'JS_NODE',
+                        btn: 'close All',
+                        btnAlign: 'c',
+                        shade: 0,
+                        yes:function(){
+                            layer.closeAll();
+                        }
+                    });
+
+                }
+            };
+            $('jmnode').attr("data-method","prompt");
+            $('jmnode').on('dblclick', function () {
+                var othis = $(this), method = othis.data('method');
+                active[method] ? active[method].call(this, othis) : '';
+            });
+		});
+    </script>
+    <script>
+        var CONTAINER_ID = "jsmindcontainer";
+        // 容器的id
+        var $d = document;
+        //获取jsmind的容器的dom节点
+        var $container = $d.getElementById(CONTAINER_ID);
+        var _h_header = $d.getElementsByClassName(".rightbox").clientHeight;
+        var options = {
+            container:CONTAINER_ID,
+            editable:true,
+            theme:'orange'
+        };
+        var _jm = new jsMind(options);
+        //获取url。得改
+        var get_mind_url = function(){
+            return location.href.split('/courses_des/')[1];
+        }
+
+        var load_ajax_mind = function(){
+            var url1 = get_mind_url();
+            var url = location.href.split('/courses_des')[0];
+            console.log("发送请求:" + url + '/courses_data/' + url1);
+            $.get(url+ '/courses_data/' + url1,function(mind){
+                console.log("成功发送请求!!");
+                _jm.show(mind);
+                $("a#mind_name").text(mind.meta.name);
+			});
+        }
+
+
+        //回掉函数，用来展示显示完成时使用的。
+        var on_mind_saved = function(data){
+            console.log("执行思维导图保存完成时的回调函数。");
+            alert("保存成功!!");
+        }
+
+        var save_map = function(e){
+            console.log("执行保存函数.");
+            var url = location.href.split('/courses_des')[0];
+            var course_id = get_mind_url();
+            console.log(JSON.stringify(_jm.get_data("node_array")));
+            $.ajax({
+                url:url + '/courses_data/data_save/' + course_id,//
+                type:'POST',
+                data:JSON.stringify(_jm.get_data("node_array")),
+                contentType:"application/json; charset=utf-8",
+                dataType:'json',
+                success: on_mind_saved
+            });
+            return false;
+        }
+
+
+        /**
+         * 添加子节点或同级节点的函数。
+         */
+        var add_sibling_node = function(e){
+            console.log("执行生成同级节点函数");
+            _jm.shortcut.handles['addbrother'](_jm,e);
+            return false;
+        }
+
+        var add_child_node = function(e){
+            console.log("执行生成子节点函数");
+            _jm.shortcut.handles['addchild'](_jm,e);
+            return false;
+        }
+
+        /**
+         * 删除节点通过jsmind库提供的函数来完成。
+         */
+        var remove_node = function(e){
+            console.log("执行删除节点函数");
+            _jm.shortcut.handles['delnode'](_jm,e);
+            return false;
+        }
+
+        var clear_map = function(e){
+            console.log("执行清空思维导图函数!");
+            curr_mind = _jm.mind;
+            _jm.show();
+            _jm.mind.author = curr_mind.author;
+            _jm.begin_edit(_jm.mind.root);
+            return false;
+        }
+
+        /**
+         * 思维导图删除函数，后端在处理相关url的时候得注意返回相关的message。
+         */
+        var on_mind_deleted = function(data){
+            console.log("执行思维导图删除完成");
+            if(data.success){
+                back_to_list();
+            }
+        }
+
+        var destory_map = function(e){
+            console.log("开始毁灭思维导图");
+            var url = location.href.split('/courses_des')[0];
+            var course_id = get_mind_url();
+            $.ajax({
+                url:url + '/destory/' + course_id ,
+                type:'GET',
+                contentType:"application/json; charset=utf-8",
+                dataType:'json',
+                success: on_mind_deleted
+            });
+            return false;
+        }
+
+
+
+
+        /**
+         * 接下来的这段代码，不断设置思维导图的当前位置，每个300毫秒设置一次，如果设置的过程超时了
+         * 遍将setTimeout函数对变量_resize_timeout_id的改变清除。
+         * 这仅仅是初步的解读，作者这么设置的思想我还是无法完全理解。
+         */
+        var set_container_size = function(){
+            var ch = window.innerHeight;
+            var cw = window.innerWidth;
+            $container.style.height = ch + 'px';
+            $container.style.width  = cw + 'px';
+        }
+
+        var init_action_menu = function(){
+            $('#save_map').click(save_map);             //注册“保存当前思维导图的事件”
+            $('#add_sibling_node').click(add_sibling_node);     //注册添加同级节点事件。
+            $('#add_child_node').click(add_child_node);       //注册“添加自节点时间”
+            $('#remove_node').click(remove_node);          //注册“删除该节点事件”
+            $('#clear_map').click(clear_map);            //注册“清空思维导图事件”
+            $('#destory_map').click(destory_map);          //注册“销毁思维导图事件”
+        }
+
+        var page_load = function(){
+            set_container_size();
+            load_ajax_mind();     //该函数方式待定，等确定完后端存储，获取数据方式之后再确定。
+            init_action_menu();
+        }
+        page_load();
+    </script>
+</html>

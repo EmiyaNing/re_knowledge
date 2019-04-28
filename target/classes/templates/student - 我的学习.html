@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html
+		xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>学生-学习主页</title>
+		<link rel="stylesheet" href="/lib/Layui/css/layui.css" />
+		<link rel="stylesheet" type="text/css" href="/lib/solar/stylesheets/simple-calendar.css">
+		<link rel="stylesheet" href="/css/style.css" />
+		<script type="text/javascript" src="/lib/Layui/layui.js"></script>
+		<script type="text/javascript" src="/lib/solar/javascripts/simple-calendar.js"></script>
+	</head>
+
+	<body>
+		<div class="layui-nav">
+			<div class="box-center nav clear">
+				<a class="logo" href="#"><img src="/img/logo.png"></a>
+
+				<ul class="navmenu" lay-filter="">
+					<li class="layui-nav-item">
+						<a href="">首页</a>
+					</li>
+					<li class="layui-nav-item ">
+						<a href="">课程广场</a>
+					</li>
+					<li class="layui-nav-item layui-this">
+						<a href="">我的学习</a>
+					</li>
+					<li class="layui-nav-item my">
+						<a href=""><img th:src="@{'/user/' + ${student.getUsername()} + '.png'}" class="layui-nav-img">我</a>
+						<dl class="layui-nav-child">
+							<dd>
+								<a href="/studenthome/editor">修改信息</a>
+							</dd>
+							<dd>
+								<a href="javascript:;">安全管理</a>
+							</dd>
+							<dd>
+								<a href="/studenthome/logout">退了</a>
+							</dd>
+						</dl>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="box-center conbg">
+			<div class="leftbox">
+				<div class="face">
+					<img th:src="@{'/user/' + ${student.getUsername()} + '.png'}">
+					<div th:text="${student.getRealname()}" class="lefname">某某某</div>
+					<span class="ide">已认证</span>
+				</div>
+
+				<ul class="lefnav">
+					<li class="this">
+						<a th:href="@{/studenthome/score}">我的学习</a>
+					</li>
+					<li class="">
+						<a th:href="@{studenthome/news}">消息中心</a>
+					</li>
+					<li class="">
+						<a th:href="@{/studenthome/editor}">个人设置</a>
+					</li>
+				</ul>
+
+			</div>
+
+			<div class="rightbox">
+                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">个人总成绩信息</li>
+                        <li>个人各个知识点成绩信息</li>
+                    </ul>
+                    <div class="layui-tab-content" style="padding: 20px; background-color: #F2F2F2;">
+                        <div class="layui-tab-item layui-show">
+                                <div class = "layui-row layui-col-space15">
+                                    <div class="layui-col-md6">
+                                        <div class="layui-card" th:each="st_reslut:${results}">
+                                            <div class="layui-card-header" th:text="'课程名' + ${st_reslut.getCourse1().getName()}"></div>
+                                            <div class="layui-card-body">
+                                                <p th:text="'个人成绩为:             ' + ${st_reslut.getClass1().getScore()}"></p>
+                                                <p th:text="'个人班级名:             ' + ${st_reslut.getClass1().getClassnum()}"></p>
+												<button class="layui-btn"><a th:href="@{'/studenthome/' + ${st_reslut.getClass1().getClassnum()}}">班级详情</a></button>
+												<a class="layui-btn layui-btn-info" th:href="@{'/jsmind_courses/courses_des/' + ${st_reslut.getClass1().getCourse_id()}}">课程详情</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+
+                </div>
+			</div>
+		</div>
+
+	</body>
+
+
+</html>

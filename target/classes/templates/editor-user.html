@@ -1,0 +1,94 @@
+<html>
+<head>
+    <link rel="stylesheet" href="/lib/jsmind/style/jsmind.css">
+    <link rel="stylesheet" href="/lib/Layui/css/layui.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="/lib/Layui/layui.js"></script>
+    <base target="_parent">
+</head>
+<body style="background-color: #F2F2F2;">
+<div style="padding: 20px;">
+            <form class="layui-form" method="post">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">学号/教工号</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="work_id" name="work_id" placeholder="请输入学号/教工号">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="username" name="username" placeholder="请输入用户名">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="password" name="password" placeholder="请输入密码">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">电话</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="phone" name="phone" placeholder="请输入电话好码">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">真实姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="realname" name="realname" placeholder="请输用户真实姓名">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">身份代号</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="status" value="0" title="学生">
+                        <input type="radio" name="status" value="1" title="教师">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="email" name="email" placeholder="请输入邮箱">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+
+</div>
+</body>
+<script>
+    layui.use(['element','form'],function(){
+        var element   = layui.element;
+        var layer     = layui.layer;
+        var $         = layui.jquery;
+        var form      = layui.form;
+        var url       = location.href.split("editor_user/")[1];
+        var urlbase   = location.href.split("/editor_user/")[0];
+        $('form').attr('action',urlbase + "/editor_user/" + url);
+        $.get(urlbase + '/get_user/' + url,function(user){
+            $('#work_id').attr('placeholder',user.work_id);
+            $('#username').attr('placeholder',user.username);
+            $('#password').attr('placeholder',user.password);
+            $('#phone').attr('placeholder',user.phone);
+            $('#realname').attr('placeholder',user.realname);
+            $('#email').attr('placeholder',user.emial);
+            $('#work_id').attr('value',user.work_id);
+            $('#username').attr('value',user.username);
+            $('#password').attr('value',user.password);
+            $('#phone').text('value',user.phone);
+            $('#realname').text('value',user.realname);
+            $('#email').text('value',user.emial);
+        });
+        form.on('submit(formDemo)',function(){
+            layer.msg(JSON.stringify(data.field));
+            return false;
+        })
+    });
+</script>
+</html>

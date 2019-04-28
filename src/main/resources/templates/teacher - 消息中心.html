@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>教师---消息中心</title>
+    <link rel="stylesheet" href="/lib/Layui/css/layui.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <script type="text/javascript" src="/lib/Layui/layui.js"></script>
+</head>
+
+<body>
+    <div class="layui-nav">
+        <div class="box-center nav clear">
+            <a class="logo" href="#"><img src="/img/logo.png"></a>
+
+            <ul class="navmenu" lay-filter="">
+                <li class="layui-nav-item">
+                    <a href="/teacherhome">首页</a>
+                </li>
+                <li class="layui-nav-item layui-this">
+                    <a href="">课程广场</a>
+                </li>
+                <li class="layui-nav-item my">
+                    <a href=""><img th:src="@{'/user/' + ${teacher.getUsername()} + '.jpg'}" class="layui-nav-img">我</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="/teacherhome/editor">修改信息</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;">安全管理</a>
+                        </dd>
+                        <dd>
+                            <a href="/teacherhome/logout">退出</a>
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="box-center conbg">
+        <div class="leftbox">
+            <div class="face">
+                <img th:src="@{'/user/' + ${teacher.getUsername()} + '.jpg'}">
+                <div th:text="${teacher.getRealname()}" class="lefname">某某某</div>
+                <span class="ide">已认证</span>
+            </div>
+
+            <ul class="lefnav">
+                <li class="">
+                    <a th:href="@{/teacherhome/classes}">我的班级</a>
+                </li>
+                <li class="">
+                    <a href="/teacherhome/courses_des">课程中心</a>
+                </li>
+                <li class="this">
+                    <a th:href="@{/teacherhome/news}">消息中心</a>
+                </li>
+                <li class="">
+                    <a th:href="@{/teacherhome}">个人设置</a>
+                </li>
+                <li class="">
+                    <a th:href="@{/teacherhome/user_editor}">用户设置</a>
+                </li>
+            </ul>
+
+        </div>
+
+        <div class="rightbox">
+            <div class="layui-tab layui-tab-brief" lay-filter="test1">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">消息中心</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="ayui-tab-item layui-show">
+                        <div class="layui-collapse">
+                            <div class="layui-colla-item" th:each="comment:${comments}">
+                                <h2 class="layui-colla-title" th:text="${comment.getRealname()} + '      发送日期为:' + ${comment.getTime()} + '    所属课程为:' + ${comment.getCourse_id()}"></h2>
+                                <div class="layui-colla-content">
+                                    <p th:text="${comment.getComment()}"></p>
+                                    <p th:text="${comment.getRealname()}"></p>
+                                    <a class="layui-btn" th:href="'/teacherhome/news/' + ${comment.getComment_id()}">删除该消息</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    layui.use('element', function () {
+        var element = layui.element;
+        var layid = location.hash.replace(/^#test1=/, '');
+        element.tabChange('test1', layid); //假设当前地址为：http://a.com#test1=222，那么选项卡会自动切换到“发送消息”这一项
+
+        //监听Tab切换，以改变地址hash值
+        element.on('tab(test1)', function(){
+            location.hash = 'test1='+ this.getAttribute('lay-id');
+        });
+    });
+</script>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+
+
+        form.on('submit(formDemo)', function (data) {
+            layer.msg(JSON.stringify(data.field));
+            return false;
+        });
+    });
+</script>
+<script>
+    layui.use('layer',function(){
+        var $ = layui.jquery, layer = layui.layer;
+        var active = {
+            setTop:function(parent){
+                console.log('执行相关功能。。。。。。。');
+                var courseid = $(parent).children('.courseid').text();
+                var coursename = $(parent).children('.coursename').text();
+                var teachname = $(parent).children('.teachname').text();
+                var receievenum = $(parent).children('.receievenum').text();
+                var sendnum = $(parent).children('.sendnum').text();
+                console.log('回复者信息:' + courseid + '\t' + coursename + '\t' + teachname + '\t' + receievenum );
+                layer.open({
+                    type:2,
+                    title:"请输入回复的内容",
+                    area:['590px','360px'],
+                    shade:0,
+                    maxmin:true,
+                    offset: [ //为了演示，随机坐标
+                        Math.random()*($(window).height()-300)
+                        ,Math.random()*($(window).width()-390)
+                    ],
+                    content:'/news/up_news/' + courseid + '/' + coursename + '/' + teachname + '/' + receievenum + '/' + sendnum,//填入的表单html代码。
+                    btn:['取消'],
+                    yes:function () {
+                        layer.closeAll();
+                    },
+                    zIndex: layer.zIndex ,//重点1
+                    success: function(layero){
+                        layer.setTop(layero); //重点2
+                    }
+                });
+            }
+        }
+        $('.layui-btn').on('click', function(){
+            console.log('点击事件捕捉成功');
+            var othis = $(this), method = othis.data('method');
+            var parent = $(othis).closest('div');
+            active[method] ? active[method].call(this, parent) : '';
+            console.log('函数执行函数调用');
+        });
+    });
+</script>
+</html>

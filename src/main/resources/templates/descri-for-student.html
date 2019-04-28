@@ -1,0 +1,52 @@
+<html>
+<head>
+    <link rel="stylesheet" href="/lib/jsmind/style/jsmind.css">
+    <link rel="stylesheet" href="/lib/Layui/css/layui.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="/lib/Layui/layui.js"></script>
+    <base target="_parent">
+</head>
+<body style="background-color: #F2F2F2;">
+<div style="padding: 20px;" class="layui-tab">
+    <ul class="layui-tab-title">
+        <li class="layui-this">详细信息</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <div class="layui-card">
+                <div class="layui-card-header">课程号为:<span id = "course_id"></span></div>
+                <div class="layui-card-body">
+                    <p>课程权重为:<span id = "weight"></span></p>
+                    <p>知识点平均成绩:<span id="avgscore"></span></p>
+                    <p>课程描述:<span id="description"></span></p>
+                    <a class="layui-btn layui-btn-normal" id="node-des">节点详细知识界面</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</body>
+<script>
+    layui.use(['element','form'],function(){
+        var element   = layui.element;
+        var layer     = layui.layer;
+        var $         = layui.jquery;
+        var form      = layui.form;
+        var url       = location.href;
+        var desnum    = url.split('/iframe')[1];
+        var urlbase   = url.split('/iframe')[0];
+        console.log(url);
+        console.log("数据url为:" + desnum);
+        console.log("基础url为:" + urlbase);
+        $.get(urlbase + '/iframe_data' +desnum,function(node){
+            $('#course_id').text(node.course_id);
+            $('#weight').text(node.weight);
+            $('#avgscore').text(node.avgscore);
+            $('#description').text(node.description);
+            $('#node-des').attr('href','/knowledge/' + node.course_id + '/' + node.id);
+        });
+    });
+</script>
+</html>

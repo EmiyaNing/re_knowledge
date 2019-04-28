@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Student_details</title>
+    <link rel="stylesheet" href="/lib/jsmind/style/jsmind.css">
+    <link rel="stylesheet" href="/lib/Layui/css/layui.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <script type="text/javascript" src="/lib/Layui/layui.js"></script>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script type="text/javascript" src="/lib/jsmind/js/jsmind.js"></script>
+    <script type="text/javascript" src="/lib/jsmind/js/jsmind.draggable.js"></script>
+    <script type="text/javascript" src="/lib/jsmind/js/jsmind.screenshot.js"></script>
+</head>
+
+<body>
+<div class="layui-nav">
+    <div class="box-center nav clear">
+        <a class="logo" href="#"><img src="/img/logo.png" /></a>
+
+        <ul class="navmenu" lay-filter="">
+            <li class="layui-nav-item"><a href="">首页</a></li>
+            <li class="layui-nav-item layui-this"><a href="">课程广场</a></li>
+            <li class="layui-nav-item my">
+                <a href=""><img src="/user/teacher.jpg" class="layui-nav-img" />我</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/stduenthome/logout">退了</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="layui-main conbg">
+    <div class="layui-tab layui-tab-brief">
+        <ul class="layui-tab-title">
+            <li class="layui-this">知识地图</li>
+        </ul>
+        <div class="layui-tab-content">
+
+            <div class="layui-tab-item layui-show">
+                <div id="jsmind_container" style="height: 600px"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+    layui.use(["element","layer"], function() {
+        var element = layui.element;
+        var $ = layui.jquery, layer = layui.layer;
+        var url        = location.href.split('/courses_des')[0];
+        var courseid= location.href.split('/courses_des')[1];
+        var active = {
+
+            prompt:function (othis) {
+                layer.open({
+                    type: 2,
+                    title: othis.attr('nodeid'),
+                    content:url + '/iframe' + courseid + '/' + othis.attr('nodeid'),
+                    area: ['350px','500px'],
+                    shade: 0.8,
+                    id: 'JS_NODE',
+                    btn: 'close All',
+                    btnAlign: 'c',
+                    shade: 0,
+                    yes:function(){
+                        layer.closeAll();
+                    }
+                });
+
+            }
+
+
+        };
+        $('jmnode').attr("data-method","prompt");
+
+
+        $('jmnode').on('dblclick', function () {
+            var othis = $(this), method = othis.data('method');
+            active[method] ? active[method].call(this, othis) : '';
+        });
+    });
+</script>
+<script>
+    var options = {
+        container:'jsmind_container',
+        editable:false,
+        theme:'orange'
+    };
+    var jm = new jsMind(options);
+    var url        = location.href.split('/courses_des')[0];
+    var course_id  = location.href.split('/courses_des')[1];
+    console.log("发送请求:" + url + '/courses_data' + course_id);
+    $.get(url+ '/courses_data' + course_id,function(mind){
+        console.log("成功发送请求!!");
+        jm.show(mind);
+    });
+</script>
+
+
+
+</html>

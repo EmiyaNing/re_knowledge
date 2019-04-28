@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html
+		xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>教师-班级成绩</title>
+		<link rel="stylesheet" th:href="@{/lib/Layui/css/layui.css}" />
+		<link rel="stylesheet" th:href="@{/css/style.css}" />
+		<script type="text/javascript" th:src="@{/lib/Layui/layui.js}"></script>
+	</head>
+
+	<body>
+		<div class="layui-nav">
+			<div class="box-center nav clear">
+				<a class="logo" href="#"><img th:src="@{/img/logo.png}"></a>
+
+				<ul class="navmenu" lay-filter="">
+					<li class="layui-nav-item">
+						<a href="/teacherhome">首页</a>
+					</li>
+					<li class="layui-nav-item ">
+						<a href="">课程广场</a>
+					</li>
+					<li class="layui-nav-item my">
+						<a href=""><img th:src="@{'/user/' + ${teacher.getUsername()} + '.jpg'}" class="layui-nav-img">我</a>
+						<dl class="layui-nav-child">
+							<dd>
+								<a href="/teacherhome/editor">修改信息</a>
+							</dd>
+							<dd>
+								<a href="javascript:;">安全管理</a>
+							</dd>
+							<dd>
+								<a href="/teacherhome/logout">退了</a>
+							</dd>
+						</dl>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="box-center conbg">
+			<div class="leftbox">
+				<div class="face">
+					<img th:src="@{'/user/' + ${teacher.getUsername()} + '.jpg'}">
+					<div class="lefname" th:text="${teacher.getRealname()}">某某某</div>
+					<span class="ide">已认证</span>
+				</div>
+
+				<ul class="lefnav">
+					<li class="this">
+						<a th:href="@{/teacherhome/classes}">我的班级</a>
+					</li>
+					<li class="">
+						<a href="/teacherhome/courses_des">课程中心</a>
+					</li>
+					<li class="">
+						<a th:href="@{/teacherhome/news}">消息中心</a>
+					</li>
+					<li class="">
+						<a th:href="@{/teacherhome}">个人设置</a>
+					</li>
+					<li class="">
+						<a th:href="@{/teacherhome/user_editor}">用户设置</a>
+					</li>
+				</ul>
+
+			</div>
+
+			<div class="rightbox">
+				<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+					<ul class="layui-tab-title">
+						<li class="layui-this" th:text="${classnum} + '的班级成员详情'"></li>
+					</ul>
+					<div class="layui-tab-content">
+						<div class="layui-tab-item layui-show">
+							<table class="layui-hide" id="test" lay-filter="test"></table>
+						</div>
+					</div>
+				</div>
+
+				
+			</div>
+		</div>
+
+	</body>
+
+	<script src="/lib/Layui/layui.js" charset="utf-8"></script>
+	<script type="text/html" id="toolbarDemo">
+		<div class="layui-btn-container">
+			<button id="addstudent" class="layui-btn layui-btn-sm" lay-event="addstudent">添加一名学生</button>
+		</div>
+	</script>
+
+	<script type="text/html" id="barDemo">
+		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+	</script>
+
+	<script>
+        layui.use('table', function () {
+            var table    = layui.table;
+            var $        = layui.jquery;
+            var urlbase  = location.href.split("/teacherhome/")[0];
+            var classnum = location.href.split("/teacherhome/")[1];
+            table.render({
+                elem: '#test',
+                url: '/teacherhome/student_data',
+                toolbar: '#toolbarDemo',
+                title: '班级学生表格',
+                cols: [
+                    [{
+                        type: 'checkbox',
+                        fixed: 'left'
+                    }, {
+                        field: 'classnum',
+                        title: '班级号',
+                        width: 150,
+                        edit: 'text'
+                    }, {
+                        field: 'name',
+                        title: '课程名',
+                        width: 200,
+                        edit: 'text',
+                    }, {
+						field: 'realname',
+						title: '姓名',
+						width: 200,
+						edit: 'text',
+					},{
+                        field: 'work_id',
+                        title: '学号',
+                        width: 150
+                    },{
+                        field: 'score',
+                        title: '学生个人成绩',
+                        width: 150,
+                    }, {
+                        field: 'avgscore',
+                        title: '班级平均成绩',
+                        width: 150,
+
+                    },{
+                    	fixed:'right',
+						title:'操作',
+						toolbar:'#barDemo',
+						width:150
+                }]
+                ],
+                page: true,
+                done: function(res, curr, count){
+                    //如果是异步请求数据方式，res即为你接口返回的信息。
+                    //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                    console.log(res);
+
+                    //得到当前页码
+                    console.log(curr);
+
+                    //得到数据总量
+                    console.log(count);
+                }
+            });
+
+            $('#addstudent').click(function(){
+                console.log("addstudent建被按下事件监听成功");
+                layer.open({
+                    type:2,
+                    title:'添加一名学生',
+                    content: '/teacherhome/addstudent/' + classnum,
+                    area:['800px','500px'],
+                    shade:0.8,
+                    btn:'关闭',
+                    btnAlign:'c',
+                    shade:0,
+                    yes:function(){
+                        layer.closeAll();
+                    }
+                });
+            });
+            //监听行工具事件
+            table.on('tool(test)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'del') {
+                    layer.confirm('真的删除行么', function (index) {
+                        obj.del();
+                        $.post('/teacherhome/delete_student',{'classnum':data.classnum,'work_id':data.work_id,'coursename':data.name},function () {
+							layer.message('请求发送成功!');
+                        })
+                        layer.close(index);
+                    });
+                }
+            });
+        });
+	</script>
+
+	<script>
+		layui.use('element', function() {
+			var element = layui.element;
+		});
+	</script>
+
+</html>

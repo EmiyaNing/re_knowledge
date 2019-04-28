@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>知识地图-学生</title>
+    <link rel="stylesheet" href="/lib/Layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="/lib/solar/stylesheets/simple-calendar.css">
+    <link rel="stylesheet" href="/css/style.css" />
+    <script type="text/javascript" src="/lib/Layui/layui.js"></script>
+    <script type="text/javascript" src="/lib/solar/javascripts/simple-calendar.js"></script>
+</head>
+
+<body>
+    <div class="layui-nav">
+        <div class="box-center nav clear">
+            <a class="logo" href="#"><img src="/img/logo.png"></a>
+
+            <ul class="navmenu" lay-filter="">
+                <li class="layui-nav-item">
+                    <a href="">首页</a>
+                </li>
+                <li class="layui-nav-item layui-this">
+                    <a href="">课程广场</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="">我的学习</a>
+                </li>
+                <li class="layui-nav-item my">
+                    <a href=""><img th:src="@{'/user/' + ${student.getUsername()} + '.png'}" class="layui-nav-img">我</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="/studenthome/editor">修改信息</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;">安全管理</a>
+                        </dd>
+                        <dd>
+                            <a href="/studenthome/logout">退了</a>
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="box-center conbg">
+        <div class="leftbox">
+            <div class="face">
+                <img th:src="@{'/user/' + ${student.getUsername()} + '.png'}">
+                <div th:text="${student.getRealname()}" class="lefname">某某某</div>
+                <span class="ide">已认证</span>
+            </div>
+
+            <ul class="lefnav">
+                <li class="">
+                    <a th:href="@{/studenthome/score}">我的学习</a>
+                </li>
+                <li class="this">
+                    <a th:href="@{/studenthome/news}">消息中心</a>
+                </li>
+                <li class="">
+                    <a th:href="@{/studenthome/editor}">个人设置</a>
+                </li>
+            </ul>
+
+        </div>
+
+        <div class="rightbox">
+            <div class="layui-tab layui-tab-brief" lay-filter="test1">
+                <ul class="layui-tab-title">
+                    <li class="layui this">消息中心</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div class="layui-collapse"  th:if="${comments.size()} != 0">
+                            <div class="layui-colla-item" th:each="comment:${comments}">
+                                <h2 class="layui-colla-title" th:text="'评论编号:   ' + ${comment.getComment_id()} + '评论所属课程id:' + ${comment.getCourse_id()}"></h2>
+                                <div class="layui-colla-content">
+                                    <p th:text="'内容:\n' + ${comment.getComment()}"></p>
+                                    <p th:text="'时间:        ' + ${comment.getTime()}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

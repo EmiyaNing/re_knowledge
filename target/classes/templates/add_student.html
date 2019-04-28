@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/lib/jsmind/style/jsmind.css">
+    <link rel="stylesheet" href="/lib/Layui/css/layui.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="/lib/Layui/layui.js"></script>
+    <base target="_parent">
+</head>
+<body style="background-color: #F2F2F2;">
+    <table class="layui-hide" id="add-student" lay-filter="allstudent"></table>
+</body>
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button id="addcheck" class="layui-btn layui-btn-sm" lay-event="addcheck">确认添加</button>
+    </div>
+</script>
+</html>
+
+<script>
+    layui.use(['element' ,'jquery' ,'table' ,'layer'], function () {
+        var layer     = layui.layer;
+        var element   = layui.element;
+        var $         = layui.jquery;
+        var table     = layui.table;
+        var urlbase   = location.href.split("/teacherhome/addstudent/")[0];
+        var classnum  = location.href.split("/teacherhome/addstudent/")[1];
+        table.render({
+            elem: '#add-student',
+            id: 'test',
+            url: urlbase + '/teacherhome/user_editor_data',
+            toolbar: '#toolbar',
+            title: '请选择需要添加的学生',
+            cols:[
+                [{
+                    type: 'checkbox',
+                    fixed: 'left'
+                }, {
+                    field: 'email',
+                    title: '邮箱',
+                    width: 120,
+                    edit: 'text'
+                }, {
+                    field: 'password',
+                    title: '密码',
+                    width: 150,
+                    edit: 'text',
+                }, {
+                    field: 'phone',
+                    title: '电话',
+                    width: 150,
+                    edit:  'text',
+                }, {
+                    field: 'realname',
+                    title: '真实姓名',
+                    width: 100
+                }, {
+                    field: 'status',
+                    title: '身份代号(0学生，1老师)',
+                    width: 100
+                }, {
+                    field: 'username',
+                    title: '用户名',
+                    width: 100,
+                }, {
+                    field: 'work_id',
+                    title: '学号/教职工号',
+                    width: 150,
+
+                }]
+            ]
+        });
+        //layui的table on头部监听有大问题，应此采用原生jquery来监听点击事件。。。
+        $('#addcheck').click(function () {
+            var checkStatus = table.checkStatus('test');
+            console.log("监听点击事件成功");
+            var data        = checkStatus.data;
+            var userworkid  = [];
+            for(var i = 0; i < data.length; i++){
+                userworkid.push(data[i].work_id);
+                console.log(data[i].work_id);
+                console.log(data[i].toString());
+            }
+            $.ajax({
+                url: urlbase + '/teacherhome/addstudent/' + classnum,
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify(userworkid),
+                contentType: 'application/json;charset=utf-8',
+                success: function (result) {
+                    layer.msg("success!!");
+                },
+                error: function (result) {
+                    layer.msg("error!!!");
+                }
+            })
+        });
+
+    });
+</script>

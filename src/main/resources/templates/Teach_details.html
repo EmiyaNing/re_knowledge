@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Teacher_details</title>
+    <link rel="stylesheet" href="/lib/Layui/css/layui.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/editor.md-master/lib/codemirror/codemirror.min.css" />
+    <link rel="stylesheet" type="text/css" href="/editor.md-master/css/editormd.css" />
+    <script type="text/javascript" src="/lib/Layui/layui.js"></script>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script type="text/javascript" src="/editor.md-master/editormd.min.js"></script>
+  </head>
+
+  <body>
+    <div class="layui-nav">
+      <div class="box-center nav clear">
+        <a class="logo" href="#"><img src="/img/logo.png"/></a>
+
+        <ul class="navmenu" lay-filter="">
+          <li class="layui-nav-item"><a href="/teacherhome">首页</a></li>
+          <li class="layui-nav-item layui-this"><a href="">课程广场</a></li>
+          <li class="layui-nav-item my">
+            <a href=""><img src="/user/teacher.jpg" class="layui-nav-img" />我</a>
+            <dl class="layui-nav-child">
+              <dd><a href="/teacherhome/logout">退了</a></dd>
+            </dl>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="layui-main conbg">
+      <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <ul class="layui-tab-title">
+          <li class="layui-this">知识点详解写作</li>
+          <li>视频讲解上传</li>
+          <li>资料上传</li>
+        </ul>
+        <div class="layui-tab-content">
+          <!--写作文档-->
+          <div class="layui-tab-item layui-show" style="text-align:center">
+              <div class="layui-tab-item layui-show" style="text-align:center">
+
+                  <div id="content-editormd" class="form-group">
+                      <textarea style="display:none;" class="form-control" id="content-editormd-markdown-doc" name="content-editormd-markdown-doc" th:text="${markfile.getBuffer()}"></textarea>
+                  </div>
+                  <button id="markdown-upload" class="layui-btn">保存文档</button>
+              </div>
+          </div>
+          <div class="layui-tab-item">
+            <!--视频上传-->
+
+            <div align="center">
+              <video
+                style="text-align: center"
+                width="960"
+                height="480"
+                controls="controls">
+                <source src="/video/gakki.mp4" id="source" type="video/mp4" />
+                <object data="/video/gakki.mp4" id="object" width="960" height="480">
+                  <embed src="movie.swf" width="960" height="480" />
+                </object>
+              </video>
+            </div>
+            <button type="button" class="layui-btn" id="video">
+              <i class="layui-icon"></i>上传视频文件
+            </button>
+          </div>
+
+          <div class="layui-tab-item">
+            <!--文件上传-->
+            <button type="button" class="layui-btn" id="ppt">
+              <i class="layui-icon"></i>上传ppt文件
+            </button>
+            <table class="layui-hide" id="file-manger" lay-filter="file-manger"></table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--评论-->
+    <div class="layui-main comments">
+    	<div class="layui-row">
+    		<form id="comment" action="" method="post">
+                <div class="layui-form-item">
+                    <div class="layui-input-block layui-form-text">
+                        <textarea name="comment" placeholder="请输入评论" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+    			<div class="layui-form-item" style="text-align: right;">
+                    <button class="layui-btn">提交评论</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+    		</form>
+    	</div>
+    
+    	<div class="layui-row" th:each="comment:${comments}">
+    		<div class="layui-col-xs1">
+    			<div class="comments-pic">
+    				<img src="/user/teacher.jpg">
+    			</div>
+    		</div>
+    		<div class="layui-col-xs11">
+    			<div class="layui-row">
+    				<div class="layui-col-md2 title" th:text="${comment.getRealname()}">会员名称</div>
+    				<div class="layui-col-xs1 del"><a th:href="@{'/knowledge/deletecomment/' + ${comment.getComment_id()}}">删除</a></div>
+    			</div>
+    			<div class="layui-row">
+    				<p th:text="${comment.getComment()}">评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容</p>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+    <script type="text/html" id="bar">
+      <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+      <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="down">下载</a>
+    </script>
+  </body>
+
+
+
+  <script>
+    layui.use(["element",'jquery','layer'], function() {
+      var element   = layui.element;
+      var $         = layui.jquery;
+      var layer     = layui.layer;
+      var table     = layui.table;
+      var urlbase   = location.href.split("/knowledge/")[0];
+      var argbase   = location.href.split("/knowledge/")[1];
+      var course_id = argbase.split("/")[0];
+      var node_id   = argbase.split("/")[1];
+      /**
+       * 设置评论提交表单的相关属性。。。
+       * */
+      $('#comment').attr('action',urlbase + "/knowledge/comment_add/" + course_id + "/" + node_id);
+      var successCallback = function(){
+            layer.msg("markdown上传...");
+      }
+
+      $('#source').attr('src',urlbase +'/knowledge/video_download' + course_id + '#' + node_id);
+      $('#object').attr('src',urlbase + '/knowledge/video_download' + course_id + '#' + node_id);
+        /**
+         * 上传markdown操作。。。。。
+         */
+      $('#markdown-upload').click(function () {
+          var markdown = $('#content-editormd-markdown-doc').text();
+          console.log("执行上传函数...");
+          $.ajax({
+              type:'POST',
+              url: urlbase + '/knowledge/markdown/' + course_id + '/' + node_id,
+              data: markdown,
+              success: successCallback(),
+              dataType: JSON
+          });
+      });
+
+    });
+  </script>
+
+  <script type="text/javascript">
+    var testEditor;
+    $(function() {
+      testEditor = editormd(
+        "content-editormd", {
+        width: "1100px",
+        height: "640px",
+        syncScrolling: "single",
+        path: "/editor.md-master/lib/",
+        saveHTMLToTextarea:true,
+      });
+    });
+  </script>
+
+  <script>
+    layui.use(["upload",'layer','table'], function() {
+      var $         = layui.jquery,
+          upload    = layui.upload;
+      var layer     = layui.layer;
+      var urlbase   = location.href.split("/knowledge")[0];
+      var argbase   = location.href.split("/knowledge/")[1];
+      var course_id = argbase.split("/")[0];
+      var node_id   = argbase.split("/")[1];
+      upload.render({
+        elem: "#video",
+        url: urlbase + "/knowledge/video/" + course_id + "/" + node_id,
+        accept: "file",
+        done: function(res) {
+          layer.msg("上传video成功!!");
+        }
+      });
+
+    });
+  </script>
+  <script>
+    layui.use(["upload","layer", 'table'], function() {
+      var $         = layui.jquery;
+      var layer     = layui.layer;
+      var table     = layui.table;
+      var urlbase   = location.href.split("/knowledge")[0];
+      var argbase   = location.href.split("/knowledge/")[1];
+      var course_id = argbase.split("/")[0];
+      var node_id   = argbase.split("/")[1];
+      table.render({
+            elem:'#file-manger',
+            url: urlbase + '/knowledge/ppt_filedata/' + course_id + '/' + node_id,
+            title: '已上传的文件',
+            cols: [
+                    [{
+                        type: 'checkbox',
+                        fixed: 'left'
+                    },{
+                        field: 'filename',
+                        title: '文件名',
+                        width: 930
+                    },{
+                        fixed: 'right',
+                        title: '操作',
+                        toolbar: '#bar',
+                        width:150
+                    }]
+            ],
+            done: function (res, curr, count) {
+                console.log(res);
+                console.log(count);
+            }
+        });
+      //开启监听......
+      table.on('tool(file-manger)',function (obj) {
+          var data      = obj.data.filename.toString();
+          var file_head = data.split(".")[0];
+          var file_tail = data.split(".")[1];
+          var event     = obj.event;
+          if(event === "del"){
+              layer.confirm('真的删除文件:' + data + "吗?", function(index){
+                  obj.del();
+                  layer.close(index);
+                  $.get(urlbase + "/knowledge/ppt_del/" + file_head + "/" + file_tail, function (data) {
+                      layer.msg("文件删除成功");
+                  });
+              });
+          }else if(event === "down"){
+              console.log("开始下载!!");
+              window.location.href = urlbase + "/knowledge/ppt_download/" + file_head + "/" + file_tail;
+              /*$.get(urlbase + "/knowledge/ppt_download/" + file_head + "/" + file_tail, function (data) {
+                  layer.msg("下载完成");
+              });*/
+          }
+      });
+    });
+  </script>
+    <script>
+        layui.use(['element', 'upload', 'layer'], function () {
+            var urlbase   = location.href.split("/knowledge")[0];
+            var argbase   = location.href.split("/knowledge/")[1];
+            var course_id = argbase.split("/")[0];
+            var node_id   = argbase.split("/")[1];
+            var upload    = layui.upload;
+            upload.render({
+                elem: "#ppt",
+                url: urlbase + "/knowledge/ppt/" + course_id + "/" + node_id,
+                accept: "file",
+                done: function(res) {
+                    layer.msg("上传文件成功!!");
+                }
+            });
+        })
+    </script>
+ 
+</html>

@@ -1,0 +1,643 @@
+@charset "utf-8";
+
+/*全局元素默认设置*/
+
+* {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	font-family: "Microsoft YaHei", "SimSun", Arial, Helvetica, sans-serif;
+}
+
+body {
+	-moz-user-select: none;
+	background-color: #F7F7F7;
+	overflow-y: scroll;
+	*overflow-y: auto;
+}
+
+img {
+	border: none;
+}
+
+a {
+	text-decoration: none;
+	color: #606060;
+}
+
+li {
+	list-style: none;
+}
+
+input,
+button {
+	outline: none;
+}
+
+
+/*盒子模型*/
+
+.box {
+	overflow: hidden;
+}
+
+.box-center {
+	width: 1500px;
+	margin: 0 auto;
+	background: #FFFFFF;
+	/*overflow: hidden;*/
+	/*clear: both;*/
+}
+
+.clear {
+	-ms-zoom: 1;
+}
+
+.clear:after {
+	content: '';
+	display: block;
+	clear: both;
+}
+
+
+
+.fl {
+	float: left;
+}
+
+.fr {
+	float: right;
+}
+
+.cb {
+	clear: both;
+}
+
+
+
+.pr {
+	position: relative;
+}
+
+.pa {
+	position: absolute;
+}
+
+.pf {
+	position: fixed;
+}
+
+
+
+.text-center {
+	text-align: center;
+}
+
+.center {
+	margin: 0 auto;
+}
+
+
+
+.mt {
+	margin-top: 10px;
+}
+
+.mb {
+	margin-bottom: 10px;
+}
+
+.ml {
+	margin-left: 10px;
+}
+
+.mr {
+	margin-right: 10px;
+}
+
+.conbg {
+	background: #FFFFFF;
+	box-shadow: 0 0 6px rgba(0, 0, 0, 0.10196078431372549);
+	margin-top: 20px;
+}
+
+
+/*登录页*/
+
+.bg {
+	width: 100%;
+	height: 100%;
+	background: url(../img/bg.jpg) no-repeat;
+	background-size: 100% 100%;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.logingbox {
+    overflow: hidden;
+	background: #F8EDD7;
+	border-radius: 80px;
+	width: 800px;
+	height: 420px;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-top: -210px;
+	margin-left: -400px;
+}
+
+.loginimg {
+	width: 380px;
+	height: 260px;
+	border-radius: 50px;
+	float: left;
+	margin-top: 70px;
+	margin-left: 50px;
+}
+
+.loginteb {
+	margin-top: 70px;
+	width: 300px;
+	float: left;
+	margin-left: 20px;
+	position: relative;
+}
+
+.loginteb>h2 {
+	font-weight: 600;
+	text-align: center;
+	font-size: 26px;
+	margin-bottom: 30px;
+}
+
+.loginteb>div {
+	border: 1px solid #C7BFA8;
+	border-radius: 25px;
+	padding: 20px;
+}
+
+.loginteb>div>form>div {
+	margin-bottom: 10px;
+}
+
+.name,
+.pwd {
+	font-family: 楷体;
+	font-size: 17px;
+	font-weight: 600;
+}
+
+.name input,
+.pwd input {
+	border: 1px solid #C7BFA8;
+	border-radius: 30px;
+	padding: 2px 7px;
+	background: none;
+}
+
+.bear input,
+.bear span {
+	vertical-align: middle;
+}
+
+.bear span {
+	font-size: 12px;
+}
+
+.bear {
+	padding: 0 20px;
+	padding-left: 50px;
+}
+
+.bear a {
+	float: right;
+	font-size: 12px;
+	margin-top: 3px;
+}
+
+.loginbtn {
+	width: 100%;
+	text-align: center;
+	padding-left: 30px;
+}
+
+.loginbtn button {
+	padding: 6px 30px;
+	background: #6CA5F6;
+	color: #FFFFFF;
+	border-radius: 50px;
+	border: none;
+	cursor: pointer;
+}
+
+.loginbtn button:hover {
+	opacity: 0.8;
+}
+
+.loginre {
+	text-align: center;
+	width: 100%;
+	display: block;
+	font-size: 12px;
+	color: #77A8EA;
+	padding-left: 30px;
+}
+
+.retu img {
+	width: 18px;
+	vertical-align: middle;
+}
+
+.retu {
+	position: absolute;
+	bottom: 50px;
+	right: 270px;
+	cursor: pointer;
+}
+
+.hint {
+	position: absolute;
+	bottom: 17px;
+	right: 70px;
+	font-size: 12px;
+}
+
+.option li {
+	width: 50%;
+	font-size: 20px !important;
+	letter-spacing: 5px
+}
+
+.option {
+	border-bottom: 2px solid #FFFFFF !important;
+}
+
+.layui-tab-brief>.layui-tab-title .layui-this {
+	color: #000000 !important;
+}
+
+.layui-tab-brief>.layui-tab-more li.layui-this:after,
+.layui-tab-brief>.layui-tab-title .layui-this:after {
+	border-bottom: 2px solid #1FB6FF;
+}
+
+.schedule {
+	width: 100%;
+	margin: 25px 0;
+	text-align: center;
+}
+
+.schedule span {
+	font-size: 20px;
+	margin: 0 10px;
+	vertical-align: middle;
+}
+
+.menu {
+	width: 100%;
+	text-align: center;
+	margin-top: 30px;
+}
+
+.menu>form>div>input {
+	margin: 18px 0;
+	width: 300px;
+}
+
+.menu .pwd {
+	padding-left: 30px;
+}
+
+.menu .loginbtn button {
+	padding: 10px 50px;
+	margin-top: 30px;
+}
+
+.menu .loginbtn {
+	padding-left: 0;
+}
+
+.schedule .this {
+	color: #6CA5F6;
+}
+
+.menu.two .name {
+	padding-right: 36px;
+}
+
+.menu.three div {
+	width: 180px;
+	line-height: 43px;
+	margin: 0 auto;
+	margin-top: 21px;
+	background: #6CA5F6;
+	height: 42px;
+	color: #FFFFFF;
+	border-radius: 50px;
+	border: none;
+	cursor: pointer;
+}
+
+.menu.three p {
+	font-size: 20px;
+}
+
+
+/*学生个人中心*/
+
+.layui-nav .layui-nav-item {
+	line-height: 100px;
+}
+
+.layui-nav {
+	background: #FFFFFF;
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.2196078431372549);
+}
+
+.nav ul li a {
+	color: #000000 !important;
+	font-size: 20px;
+}
+
+.nav ul li {
+	border-left: 1px solid #E2E7EB;
+	border-right: 1px solid #E2E7EB;
+	width: 150px;
+	text-align: center;
+	margin-left: -5px;
+}
+
+.nav .logo {
+	display: inline-block;
+	width: 300px;
+	height: 100px;
+	padding-top: 20px;
+	overflow: hidden;
+	float: left;
+}
+
+.nav .logo img {
+	width: 200px;
+	height: 60px;
+}
+
+.navmenu {
+	float: right;
+	width: 80%;
+}
+
+.nav .layui-nav-child {
+	top: 103px;
+}
+
+.nav .layui-nav-bar {
+	display: none;
+}
+
+.layui-nav .layui-this:after,
+.layui-nav-bar,
+.layui-nav-tree .layui-nav-itemed:after {
+	background-color: #1FB6FF !important;
+}
+
+.navmenu .my {
+	float: right;
+	border: none;
+	padding: 0;
+	/*margin-left: 300px;*/
+}
+
+.layui-nav .layui-nav-more {
+	border-top-color: #CACBD0;
+	/*text-align: right;*/
+	width: 0;
+	height: 0;
+	border-style: solid dashed dashed;
+	border-color: #CACBD0 transparent transparent;
+	overflow: hidden;
+	cursor: pointer;
+	transition: all .2s;
+	-webkit-transition: all .2s;
+	position: absolute;
+	top: 50%;
+	right: 8px;
+	margin-top: -3px;
+	border-width: 6px;
+	border-top-color: #CACBD0;
+}
+
+.layui-nav-img {
+	width: 36px;
+	height: 36px;
+	vertical-align: middle;
+	margin-right: 10px;
+	border-radius: 50%;
+}
+
+
+/*正文左边栏导航*/
+
+.leftbox {
+	width: 296px;
+	height: 760px;
+	background: #FAFAFA;
+	border-right: 1px solid #efefef;
+	display: inline-block;
+}
+
+.leftbox .face {
+	width: 100%;
+	text-align: center;
+	position: relative;
+}
+
+.leftbox .face img {
+	width: 130px;
+	height: 130px;
+	border-radius: 50%;
+	margin-top: 50px;
+	margin-bottom: 15px;
+}
+
+.leftbox .face div {
+	font-size: 20px;
+}
+
+.leftbox .face .ide {
+	position: absolute;
+	bottom: 1px;
+	right: 57px;
+	color: #6BD66C;
+	padding: 1px 5px;
+	border: 1px solid #6BD66C;
+	border-radius: 3px;
+}
+
+.lefnav {
+	width: 100%;
+	border-top: 1px solid #eaeaea;
+	border-bottom: 1px solid #eaeaea;
+	margin-top: 50px;
+	padding: 30px 0;
+}
+
+.lefnav li {
+	width: 100%;
+	padding: 10px 0;
+	border-left: 5px solid #FAFAFA;
+	cursor: pointer;
+}
+
+.lefnav li a {
+	margin-left: 40px;
+	font-size: 16px;
+}
+
+.lefnav li:hover a {
+	color: #1EB0FB;
+}
+
+.lefnav .this {
+	border-left: 5px solid #1EB0FB;
+	background: #FFFFFF;
+}
+
+.lefnav .this a {
+	color: #1EB0FB;
+}
+
+.rightbox {
+	width: 80%;
+	height: 100%;
+	float: right;
+}
+
+.layui-tab-title .layui-this:after {
+	height: 45px;
+}
+
+.layui-tab-title {
+	height: 45px;
+}
+
+.rightbox .layui-tab-brief>.layui-tab-title .layui-this {
+	color: #1eb0fb !important;
+}
+
+#calendar {
+	width: 100%;
+	height: 500px;
+}
+
+.rightbox form{
+	margin-top: 50px;
+}
+.rightbox .layui-form-label {
+	width: 125px;
+}
+.rightbox .layui-input-block input{
+	width: 300px;
+}
+.rightbox .layui-input-inline input{
+	width: 300px;
+}
+.rightbox .layui-form>.layui-btn{
+	margin-left: 125px;
+	background: #1E9FFF;
+}
+.rightbox .layui-form-radio>i:hover, .layui-form-radioed>i{
+	color: #1E9FFF;
+}
+.rightbox .layui-input-block{
+	margin-bottom: 15px;
+}
+.rightbox .layui-form-item>button{
+	width: 300px;
+	border-color: #e6e6e6;
+}
+.rightbox .layui-inline .layui-input-inline a{
+    margin-top: -28px;
+    margin-left: 260px;
+    display: inherit;
+    white-space: nowrap;
+    color: #5fb878;
+}
+
+
+
+.comments{
+	margin-top: 30px !important;
+}
+.comments textarea{
+	padding: 10px;
+	display: block;
+	width: 100%;
+	min-height: 80px;
+    border: none;
+	box-shadow: 0 0 6px rgba(0, 0, 0, 0.10196078431372549);
+}
+.comments input{
+	border:0;
+	padding: 5px 20px;
+	margin-top: 15px;
+	float: right;
+	margin-bottom: 30px;
+	background: #1E9EFF;
+	color: #FFFFFf;
+	border-radius: 3px;
+	cursor: pointer;
+}
+.comments .comments-pic{
+	width: 90%;
+	height: 80px;
+	overflow: hidden;
+	border-radius: 3px;
+}
+.comments .comments-pic img{
+	width: 100%;
+}
+.comments .title{
+	font-size: 16px;
+	font-weight: 600;
+}
+.comments .zan{
+	text-align: right;
+}
+.comments .zan i{
+	margin-right: 5px;
+}
+.comments p{
+	font-size: 15px;
+	text-align: justify;
+	margin-top: 20px;
+	margin-bottom: 40px;
+}
+.comments .del{
+	text-align: right;
+}
+.comments .del a{
+	display: inline-block;
+	color: red;
+}
+.kejian{
+	padding: 10px 15px;
+	margin: 5px 0;
+	border: 1px dashed #dcdcdc;
+}
+.kejian p{
+	display: inline-block;
+}
+.kejian a{
+	float: right;
+	padding: 3px 10px;
+	background: #1E9EFF;
+	color: #FFFFFC;
+	border-radius: 3px;
+	font-size:13px ;
+}
